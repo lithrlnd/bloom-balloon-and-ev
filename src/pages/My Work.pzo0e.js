@@ -1,10 +1,29 @@
-// API Reference: https://www.wix.com/velo/reference/api-overview/introduction
-// “Hello, World!” Example: https://learn-code.wix.com/en/article/hello-world
+import wixData from 'wix-data';
 
 $w.onReady(function () {
-    // Write your JavaScript here
+  const repeater   = $w('#portfolioRepeater');
+  const dataset    = $w('#portfolioDataset');
+  const categoryDD = $w('#categoryDropdown');
 
-    // To select an element by ID use: $w('#elementID')
+  // Sort newest first
+  dataset.onReady(() => {
+    dataset.setSort(wixData.sort().descending('date'));
+  });
 
-    // Click 'Preview' to run your code
+  // Filter by category
+  categoryDD.onChange(() => {
+    const val = categoryDD.value;
+    dataset.setFilter(
+      val === 'All'
+        ? wixData.filter()
+        : wixData.filter().eq('category', val)
+    );
+  });
+
+  // Hover animation
+  repeater.onItemReady(($item) => {
+    const card = $item('#cardBox');
+    card.onMouseIn(() => card.addClass('hover'));
+    card.onMouseOut(() => card.removeClass('hover'));
+  });
 });
